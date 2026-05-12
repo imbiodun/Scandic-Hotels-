@@ -4,8 +4,8 @@ from django.shortcuts import render
 def home(request):
     return render(request,"home.html")
 
-def sign_in(request):
-    return render(request,"sign-in.html")
+def signup(request):
+    return render(request,"signup.html")
 
 def rooms(request):
     return render(request,"rooms.html")
