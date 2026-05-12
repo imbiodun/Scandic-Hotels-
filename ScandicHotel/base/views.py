@@ -25,7 +25,7 @@ def contact(request):
                 'Contact Form Submission',
                 f'Name: {name}\nEmail: {email}\nMessage: {message}',
                 email,
-                ['your-email@example.com'],
+                ['scandichotelnoreply@gmail.com'],
                 fail_silently=False,
             )
             return render(request, "contact_success.html", {"name": name})
