@@ -2,5 +2,31 @@
 
 
 {% block content %}
-<h1>Contact</h1>
+<div class="Contact-hero-section">
+    <div class="hero-caption">
+        <h1>Get in Touch with Scandic</h1>
+        <p>Have questions or need assistance? Send us a message, our team is here to help you with all your inquiries.</p>
+        <form method="POST" action="{% url 'contact' %}">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-gold">Send Message</button>
+    </div>
+
+</div>
 {% endblock %}
+
+
+
+
