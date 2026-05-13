@@ -15,13 +15,14 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # Create your views here.
 def home(request):
-    return render(request,"home.html")
+    rooms = Room.objects.all()[:3] 
+    return render(request,"home.html", {'rooms': rooms})
 
 def signup(request):
     return render(request,"signup.html")
 
 def rooms(request):
-    rooms = Room.objects.all()
+    rooms = Room.objects.all() 
     return render(request,"rooms.html", {'rooms': rooms})
 
 def contact(request):
