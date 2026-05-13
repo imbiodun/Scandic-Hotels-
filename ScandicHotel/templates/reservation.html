@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid min-vh-100">
+  <div class="row min-vh-100">
+    
+    <!-- Left side - room info -->
+    <div class="col-md-5 p-0 position-relative">
+      <img src="{{ room.image_url }}" alt="{{ room.room_name }}" 
+           style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="position-absolute bottom-0 start-0 w-100 p-4 text-white" 
+           style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+        <h3 class="fw-bold">{{ room.room_name }}</h3>
+        <p class="mb-1"><i class="fas fa-bed me-2"></i>{{ room.beds }} Beds · {{ room.max_guests }} Guests · {{ room.capacity }} m²</p>
+        <p class="fw-bold" style="color: #d4af37;">€{{ room.price }} / night</p>
+      </div>
+    </div>
+
+    <!-- Right side - form -->
+    <div class="col-md-7 d-flex align-items-center justify-content-center py-5">
+      <div class="w-75">
+        <h2 class="fw-bold mb-1" style="color: #1e3c5c;">Make a Reservation</h2>
+        <p class="text-muted mb-4">Fill in your details to book {{ room.room_name }}</p>
+
+        <form method="POST">
+          {% csrf_token %}
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-500">Guest Name</label>
+              {{ form.guest_name }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Guest Email</label>
+              {{ form.guest_email }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Check-in Date</label>
+              {{ form.check_in }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Check-out Date</label>
+              {{ form.check_out }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Number of Guests</label>
+              {{ form.number_of_guests }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Payment Method</label>
+              {{ form.Payment_method }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Discount Code</label>
+              {{ form.discount_code }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Special Requests</label>
+              {{ form.special_requests }}
+            </div>
+          </div>
+
+          <button type="submit" class="btn w-100 mt-4" 
+                  style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px;">
+            Confirm Reservation
+          </button>
+        </form>
+
+        <p class="text-center mt-3 text-muted">
+          <a href="{% url 'room_detail' room.slug %}" style="color: #d4af37;">← Back to room details</a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

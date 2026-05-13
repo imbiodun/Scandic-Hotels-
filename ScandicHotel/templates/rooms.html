@@ -3,4 +3,20 @@
 
 {% block content %}
 <h1>Rooms</h1>
+<div class="row g-4">
+    {% for room in rooms %}
+    <div class="col-lg-4 col-md-6">
+        <div class="room-card">
+            <img src="{{ room.image_url }}" alt="{{ room.room_name }}" loading="lazy">
+            <div class="room-info">
+                <h5>{{ room.room_name }}</h5>
+                <p class="text-muted">{{ room.room_description }}</p>
+                <p class="text-gold fw-bold">€{{ room.price}} / night</p>
+                <a href="{% url 'room_detail' room.slug %}" class="btn btn-sm-gold">
+                    View Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 {% endblock %}
