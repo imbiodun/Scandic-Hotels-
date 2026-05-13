@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h2 class="mb-4" style="color: #1e3c5c;">Reservation Successful</h2>
+            <p class="text-muted   mb-4">Thank you for your reservation! We look forward to welcoming you to Scandic Hotel. A confirmation email has been sent to your inbox.</p>
+            <a href="{% url 'home' %}" class="btn" style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px;">
+                Return to Homepage              
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
