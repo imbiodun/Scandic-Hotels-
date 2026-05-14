@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            {% if request.user.first_name %}
+                <h2 class="fw-bold" style="color: #1e3c5c;">Welcome back, {{ request.user.first_name }}! 👋</h2>
+            {% else %}
+                <h2 class="fw-bold" style="color: #1e3c5c;">Welcome back, {{ request.user.email }}! 👋</h2>
+            {% endif %}
+            <p class="text-muted">Here's a summary of your Scandic experience</p>
+        </div>
+    </div>
+
+    <!-- Admin Alert -->
+    {% if request.user.is_staff or request.user.is_superuser %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert d-flex align-items-center justify-content-between" 
+                 style="background-color: #fff8e7; border-left: 4px solid #d4af37; color: #1e3c5c;">
+                <span><i class="fas fa-shield-alt me-2" style="color: #d4af37;"></i> You have admin privileges.</span>
+                <a href="/admin/" class="btn btn-sm" style="background-color: #d4af37; color: #1e3c5c; border-radius: 40px; font-weight: 600;">
+                    Go to Admin Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Stats Row -->
+    <div class="row g-4 mb-5">
+        <!-- Membership Card -->
+        <div class="col-md-4">
+            <div class="p-4 rounded-4 text-center h-100" style="background-color: #ffffff; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 4px solid #d4af37;">
+                {% if membership == 'Gold' %}
+                    <div style="font-size: 3rem;">🥇</div>
+                {% elif membership == 'Silver' %}
+                    <div style="font-size: 3rem;">🥈</div>
+                {% else %}
+                    <div style="font-size: 3rem;">🥉</div>
+                {% endif %}
+                <h5 class="fw-bold mt-2" style="color: #1e3c5c;">{{ membership }} Member</h5>
+                <p class="text-muted mb-0">{{ total_stays }} completed stay{{ total_stays|pluralize }}</p>
+            </div>
+        </div>
+
+        <!-- Email Card -->
+        <div class="col-md-4">
+            <div class="p-4 rounded-4 text-center h-100" style="background-color: #ffffff; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 4px solid #1e3c5c;">
+                <div style="font-size: 3rem;">✉️</div>
+                <h5 class="fw-bold mt-2" style="color: #1e3c5c;">Email</h5>
+                <p class="text-muted mb-0" style="font-size: 0.9rem; word-break: break-all;">{{ request.user.email }}</p>
+            </div>
+        </div>
+
+        <!-- Upcoming Card -->
+        <div class="col-md-4">
+            <div class="p-4 rounded-4 text-center h-100" style="background-color: #ffffff; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 4px solid #d4af37;">
+                <div style="font-size: 3rem;">🗓️</div>
+                <h5 class="fw-bold mt-2" style="color: #1e3c5c;">Upcoming Stays</h5>
+                <p class="text-muted mb-0">{{ upcoming.count }} reservation{{ upcoming.count|pluralize }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Reservations -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h4 class="fw-bold mb-4" style="color: #1e3c5c;">
+                <i class="fas fa-calendar-check me-2" style="color: #d4af37;"></i> Upcoming Reservations
+            </h4>
+            {% if upcoming %}
+                {% for res in upcoming %}
+                <div class="card mb-3 border-0 rounded-4 p-4" style="box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="fw-bold mb-1" style="color: #1e3c5c;">{{ res.room.room_name }}</h5>
+                            <p class="text-muted mb-1">
+                                <i class="fas fa-sign-in-alt me-1"></i> {{ res.check_in }} 
+                                &nbsp;→&nbsp; 
+                                <i class="fas fa-sign-out-alt me-1"></i> {{ res.check_out }}
+                            </p>
+                            <p class="mb-0">Total: <strong style="color: #d4af37;">€{{ res.total_price }}</strong></p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            {% if res.status == 'confirmed' %}
+                                <span class="badge px-3 py-2" style="background-color: #d4f7e0; color: #1a7a4a; border-radius: 40px;">✓ Confirmed</span>
+                            {% elif res.status == 'pending' %}
+                                <span class="badge px-3 py-2" style="background-color: #fff3cd; color: #856404; border-radius: 40px;">⏳ Pending</span>
+                            {% else %}
+                                <span class="badge px-3 py-2" style="background-color: #f8d7da; color: #842029; border-radius: 40px;">✗ Rejected</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5 rounded-4" style="background-color: #f8f9fc;">
+                    <p class="text-muted mb-3">No upcoming reservations.</p>
+                    <a href="{% url 'rooms' %}" class="btn" style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px;">
+                        Browse Rooms
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Past Reservations -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h4 class="fw-bold mb-4" style="color: #1e3c5c;">
+                <i class="fas fa-history me-2" style="color: #d4af37;"></i> Past Reservations
+            </h4>
+            {% if past %}
+                {% for res in past %}
+                <div class="card mb-3 border-0 rounded-4 p-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.03); opacity: 0.8;">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="fw-bold mb-1" style="color: #1e3c5c;">{{ res.room.room_name }}</h5>
+                            <p class="text-muted mb-1">
+                                <i class="fas fa-sign-in-alt me-1"></i> {{ res.check_in }} 
+                                &nbsp;→&nbsp; 
+                                <i class="fas fa-sign-out-alt me-1"></i> {{ res.check_out }}
+                            </p>
+                            <p class="mb-0">Total: <strong>€{{ res.total_price }}</strong></p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <span class="badge px-3 py-2" style="background-color: #e9ecef; color: #6c757d; border-radius: 40px;">Completed</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5 rounded-4" style="background-color: #f8f9fc;">
+                    <p class="text-muted">No past reservations yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Return Button -->
+    <div class="text-center">
+        <a href="{% url 'home' %}" class="btn px-5 py-2" style="border: 1.5px solid #1e3c5c; color: #1e3c5c; border-radius: 40px; font-weight: 500;">
+            ← Return to Homepage
+        </a>
+    </div>
+
+    <!-- Logout Button -->
+     <form method="post" action="{% url 'account_logout' %}" class="text-center mt-3">
+    {% csrf_token %}
+    <a href="{% url 'account_logout' %}" type="submit" class="btn px-5 py-2" style="border: 1.5px solid #1e3c5c; color: #1e3c5c; border-radius: 40px; font-weight: 500;">
+        Logout
+    </a>
+</form>
+</div>
+{% endblock %}

@@ -10,5 +10,6 @@ urlpatterns=[
     path('rooms/<slug:slug>/', views.room_detail, name='room_detail'),
     path('rooms/<slug:slug>/reservation/', views.reservation, name='reservation'),
     path('reservation/reservation_success/', views.reservation_success, name='reservation_success'),
-    
+    path('logout/', views.logout_view, name='logout'),
+    path('profile/',views.profile, name="profile"),
 ]

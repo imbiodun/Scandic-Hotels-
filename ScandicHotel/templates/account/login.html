@@ -14,8 +14,8 @@
     <!-- Right side - form -->
     <div class="col-md-6 d-flex align-items-center justify-content-center">
       <div class="w-75">
-        <h2 class="fw-bold mb-1" style="color: #1e3c5c;">Create Account</h2>
-        <p class="text-muted mb-4">Join Scandic Hotel today</p>
+        <h2 class="fw-bold mb-1" style="color: #1e3c5c;">Log In to Your Account</h2>
+        <p class="text-muted mb-4">Welcome back! Please enter your credentials to log in.</p>
 
         <form method="POST" action="{% url 'account_login' %}">
           {% csrf_token %}
@@ -34,6 +34,14 @@
         <p class="text-center mt-4 text-muted">Don't have an account? 
           <a href="{% url 'account_signup' %}" style="color: #d4af37;">Sign Up</a>
         </p>
+
+        {% if form.errors %}
+  <div class="alert" style="background-color: #fff3cd; border-left: 4px solid #d4af37; color: #1e3c5c;" role="alert">
+    <i class="fas fa-exclamation-circle me-2"></i>
+    No account found with this email. 
+    <a href="{% url 'account_signup' %}" style="color: #d4af37;">Sign up here</a>
+  </div>
+{% endif %}
       </div>
     </div>
 

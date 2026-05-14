@@ -185,3 +185,32 @@ def reservation_success(request):
     del request.session['reservation_data']
 
     return render(request, "reservation_success.html", {"reservation": reservation})
+
+@login_required
+def profile(request):
+    from django.utils import timezone
+    today = timezone.now().date()
+    
+    upcoming = Reservation.objects.filter(user=request.user, check_out__gte=today).order_by('check_in')
+    past = Reservation.objects.filter(user=request.user, check_out__lt=today).order_by('-check_in')
+    total_stays = past.count()
+    
+    # Membership tier
+    if total_stays >= 10:
+        membership = 'Gold'
+    elif total_stays >= 5:
+        membership = 'Silver'
+    else:
+        membership = 'Bronze'
+    
+    return render(request, "profile.html", {
+        'upcoming': upcoming,
+        'past': past,
+        'membership': membership,
+        'total_stays': total_stays,
+    })
+
+def logout_view(request):
+    from django.contrib.auth import logout
+    logout(request)
+    return redirect('home')
