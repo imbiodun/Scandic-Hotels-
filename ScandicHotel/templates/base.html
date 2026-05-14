@@ -315,11 +315,18 @@
     <a class="nav-link {% if request.resolver_match.url_name == 'rooms' %}active{% endif %}" href="{% url 'rooms' %}">Rooms</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'account_signup' %}active{% endif %}" href="{% url 'account_signup' %}">Sign-up</a>
+    <a class="nav-link {% if request.resolver_match.url_name == 'account_signup' %}active{% endif %}" href="{% url 'account_signup' %}">Join/Log in</a>
   </li>
   <li class="nav-item">
     <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
   </li>
+  
+  {% if request.user.is_authenticated %}
+<li class="nav-item">
+    <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
+</li>
+{% endif %}
+
 </ul>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search destinations" aria-label="Search">
