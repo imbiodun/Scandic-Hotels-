@@ -1,15 +1,279 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <h2 class="mb-4" style="color: #1e3c5c;">Reservation Successful</h2>
-            <p class="text-muted   mb-4">Thank you for your reservation! We look forward to welcoming you to Scandic Hotel. A confirmation email has been sent to your inbox.</p>
-            <a href="{% url 'home' %}" class="btn" style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px;">
-                Return to Homepage              
-            </a>
+<div class="container-fluid min-vh-100 p-0">
+    <div class="row min-vh-100 m-0">
+        
+        <!-- Left side - Celebration Image -->
+        <div class="col-md-6 p-0">
+            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+                 alt="Luxury Hotel Room" 
+                 style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        
+        <!-- Right side - Success Message -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center p-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+            <div class="w-75 text-center">
+                
+                <!-- Success Animation / Icon -->
+                <div class="mb-4">
+                    <div class="success-animation">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Confetti Effect (optional) -->
+                <canvas id="confetti" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999;"></canvas>
+                
+                <h1 class="display-4 fw-bold mb-3" style="color: #1e3c5c;">
+                    Reservation Confirmed! 🎉
+                </h1>
+                
+                <p class="lead text-muted mb-4">
+                    Thank you for choosing Scandic Hotel
+                </p>
+                
+                <div class="card border-0 shadow-sm mb-4" style="border-radius: 20px; background: #ffffff;">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <i class="fas fa-check-circle" style="color: #d4af37; font-size: 2rem;"></i>
+                                </div>
+                                <p class="text-muted mb-0" style="font-size: 1.1rem;">
+                                    Your reservation has been successfully processed. 
+                                    A confirmation email has been sent to your inbox with all the details.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Booking Details Placeholder (optional) -->
+                        <div class="row mt-4 pt-3 border-top">
+                            <div class="col-md-6 text-start">
+                                <small class="text-muted">Booking Reference</small>
+                                <p class="fw-bold mb-0" style="color: #1e3c5c;">#{{ booking_id|default:"SCN-2025-001234" }}</p>
+                            </div>
+                            <div class="col-md-6 text-start text-md-end">
+                                <small class="text-muted">Confirmation Sent To</small>
+                                <p class="fw-bold mb-0" style="color: #1e3c5c;">{{ request.user.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- What's Next Section -->
+                <div class="mb-4">
+                    <h5 class="fw-semibold mb-3" style="color: #1e3c5c;">What's Next?</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="p-3" style="background-color: #f8f9fa; border-radius: 12px;">
+                                <i class="fas fa-envelope fa-2x mb-2" style="color: #d4af37;"></i>
+                                <p class="mb-0 small">Check your email for confirmation</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3" style="background-color: #f8f9fa; border-radius: 12px;">
+                                <i class="fas fa-calendar-check fa-2x mb-2" style="color: #d4af37;"></i>
+                                <p class="mb-0 small">Add to your calendar</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3" style="background-color: #f8f9fa; border-radius: 12px;">
+                                <i class="fas fa-concierge-bell fa-2x mb-2" style="color: #d4af37;"></i>
+                                <p class="mb-0 small">Prepare for your stay</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{% url 'home' %}" class="btn px-4 py-2" 
+                       style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px; transition: all 0.3s ease;">
+                        <i class="fas fa-home me-2"></i>Return to Homepage
+                    </a>
+                    <a href="{% url 'rooms' %}" class="btn px-4 py-2" 
+                       style="background-color: transparent; border: 2px solid #d4af37; color: #1e3c5c; font-weight: 600; border-radius: 40px; transition: all 0.3s ease;">
+                        <i class="fas fa-bed me-2"></i>View Rooms
+                    </a>
+                </div>
+                
+                <!-- Share Section -->
+                <div class="mt-5 pt-3">
+                    <p class="text-muted small mb-2">Share your excitement</p>
+                    <div>
+                        <a href="#" class="text-decoration-none me-3" style="color: #1e3c5c;">
+                            <i class="fab fa-facebook fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-decoration-none me-3" style="color: #1e3c5c;">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-decoration-none me-3" style="color: #1e3c5c;">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-decoration-none" style="color: #1e3c5c;">
+                            <i class="fab fa-whatsapp fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Success Animation Styles */
+    .success-animation {
+        display: inline-block;
+    }
+    
+    .checkmark {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: block;
+        stroke-width: 2;
+        stroke: #d4af37;
+        stroke-miterlimit: 10;
+        box-shadow: inset 0px 0px 0px #d4af37;
+        animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+    
+    .checkmark__circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        stroke: #d4af37;
+        fill: none;
+        animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+    
+    .checkmark__check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    }
+    
+    @keyframes stroke {
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+    
+    @keyframes scale {
+        0%, 100% {
+            transform: none;
+        }
+        50% {
+            transform: scale3d(1.1, 1.1, 1);
+        }
+    }
+    
+    @keyframes fill {
+        100% {
+            box-shadow: inset 0px 0px 0px 30px #d4af37;
+        }
+    }
+    
+    /* Button Hover Effects */
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+    }
+    
+    /* Card Hover */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .display-4 {
+            font-size: 2rem;
+        }
+        
+        .w-75 {
+            width: 100% !important;
+        }
+    }
+</style>
+
+<!-- Confetti Script (optional) -->
+<script>
+// Simple confetti effect
+(function() {
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    
+    function spawnConfetti() {
+        var canvas = document.getElementById('confetti');
+        if (!canvas) return;
+        
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        var particles = [];
+        var colors = ['#d4af37', '#1e3c5c', '#f8d7da', '#d4af37', '#ffd700'];
+        
+        for (var i = 0; i < 150; i++) {
+            particles.push({
+                x: random(0, canvas.width),
+                y: random(-canvas.height, 0),
+                size: random(4, 10),
+                color: colors[Math.floor(random(0, colors.length))],
+                speed: random(3, 8),
+                angle: random(0, Math.PI * 2)
+            });
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            var stillActive = false;
+            
+            for (var i = 0; i < particles.length; i++) {
+                var p = particles[i];
+                p.y += p.speed;
+                
+                if (p.y < canvas.height + 50) {
+                    stillActive = true;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                }
+            }
+            
+            if (stillActive) {
+                requestAnimationFrame(animate);
+            } else {
+                canvas.style.display = 'none';
+            }
+        }
+        
+        animate();
+        
+        setTimeout(function() {
+            canvas.style.display = 'none';
+        }, 5000);
+    }
+    
+    // Run confetti on page load
+    window.addEventListener('load', function() {
+        setTimeout(spawnConfetti, 500);
+    });
+})();
+</script>
+
+<!-- Font Awesome (if not already in base.html) -->
+<script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
 {% endblock %}

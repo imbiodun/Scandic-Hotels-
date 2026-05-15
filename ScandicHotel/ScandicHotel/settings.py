@@ -174,5 +174,6 @@ SOCIALACCOUNT_ADAPTER = 'base.adapters.MySocialAccountAdapter'
 
 ACCOUNT_FORMS = {
     'signup': 'base.form.CustomSignupForm',
+    'login': 'base.form.CustomLoginForm',
     
 }

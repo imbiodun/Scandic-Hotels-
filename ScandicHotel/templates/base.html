@@ -43,9 +43,20 @@
       color: #2c3e50 !important;
       margin: 0 0.2rem;
       transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-link i {
+      font-size: 1rem;
+      transition: 0.2s;
     }
     .nav-link:hover, .nav-link.active {
       color: #d4af37 !important;
+    }
+    .nav-link:hover i, .nav-link.active i {
+      color: #d4af37 !important;
+      transform: translateY(-2px);
     }
     .btn-outline-custom {
       border: 1.5px solid #d4af37;
@@ -133,7 +144,6 @@
       justify-content: center;
       margin-bottom: 0;
     }
-
 
     /* Overlay for better text visibility */
     .Contact-hero-section::before {
@@ -294,71 +304,141 @@
       .section-title {
         font-size: 1.9rem;
       }
+      .nav-link i {
+        margin-right: 0;
+      }
+      .nav-link span {
+        display: inline;
+      }
+    }
+
+    /* User dropdown styling */
+    .user-dropdown .dropdown-menu {
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    .user-dropdown .dropdown-item:hover {
+      background-color: rgba(212, 175, 55, 0.1);
+      color: #d4af37;
+    }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      background-color: #d4af37;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #1e3c5c;
+      font-weight: bold;
+      margin-right: 5px;
     }
   </style>
 </head>
 <body>
 
-<!-- Navigation bar (exactly matching structure but enhanced) -->
+<!-- Navigation bar with icons -->
 <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="{% url 'home' %}">🏨 Scandic Hotel</a>
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <i class="fas fa-hotel me-2"></i> Scandic Hotel
+    </a>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-  <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'rooms' %}active{% endif %}" href="{% url 'rooms' %}">Rooms</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'account_signup' %}active{% endif %}" href="{% url 'account_signup' %}">Join/Log in</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
-  </li>
-  
-  {% if request.user.is_authenticated %}
-<li class="nav-item">
-    <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
-</li>
-{% endif %}
-
-</ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search destinations" aria-label="Search">
-        <button class="btn btn-outline-custom" type="submit"><i class="fas fa-search me-1"></i> Search</button>
-      </form>
+        
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'rooms' %}active{% endif %}" href="{% url 'rooms' %}">
+            <i class="fas fa-bed"></i> <span>Rooms</span>
+          </a>
+        </li>
+        
+        
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">
+            <i class="fas fa-user-circle"></i> <span>My Bookings</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_logout' %}">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+          </a>
+        </li>
+        {% else %}
+       
+        {% endif %}
+        
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">
+            <i class="fas fa-envelope"></i> <span>Contact</span>
+          </a>
+        </li>
+        
+        {% if request.user.is_authenticated and request.user.is_staff %}
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/">
+            <i class="fas fa-crown"></i> <span>Admin</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+      
+      
+      
+      {% if request.user.is_authenticated %}
+      
+      {% else %}
+      <div class="d-flex gap-2">
+        <a href="{% url 'account_login' %}" class="btn btn-outline-custom">
+          <i class="fas fa-sign-in-alt me-1"></i> Sign In
+        </a>
+        <a href="{% url 'account_signup' %}" class="btn btn-gold">
+          <i class="fas fa-user-plus me-1"></i> Sign Up
+        </a>
+      </div>
+      {% endif %}
     </div>
   </div>
 </nav>
 
 {% block content %}
 {% endblock %}
+
 <!-- Modern Footer -->
 <footer>
   <div class="container">
     <div class="row">
       <div class="col-md-4 mb-4">
-        <h5 class="fw-bold" style="color: #d4af37;">Scandic Hotel</h5>
+        <h5 class="fw-bold" style="color: #d4af37;">
+          <i class="fas fa-hotel me-2"></i>Scandic Hotel
+        </h5>
         <p>Scandinavian heritage, modern comfort. Founded in 1989, we are pioneers in sustainable luxury hospitality.</p>
         <div>
-          <i class="fab fa-instagram me-3 fs-5"></i>
-          <i class="fab fa-facebook me-3 fs-5"></i>
-          <i class="fab fa-twitter me-3 fs-5"></i>
-          <i class="fab fa-linkedin fs-5"></i>
+          <a href="#" class="text-white-50 me-3"><i class="fab fa-instagram fs-5"></i></a>
+          <a href="#" class="text-white-50 me-3"><i class="fab fa-facebook fs-5"></i></a>
+          <a href="#" class="text-white-50 me-3"><i class="fab fa-twitter fs-5"></i></a>
+          <a href="#" class="text-white-50"><i class="fab fa-linkedin fs-5"></i></a>
         </div>
       </div>
       <div class="col-md-2 mb-4">
         <h6 class="fw-bold">Explore</h6>
         <ul class="list-unstyled">
-          <li><a href="{% url 'rooms' %}" class="text-decoration-none text-white-50">Rooms</a></li>
-          <li><a href="#" class="text-decoration-none text-white-50">Dining</a></li>
-          <li><a href="#" class="text-decoration-none text-white-50">Spa & Wellness</a></li>
-          <li><a href="#" class="text-decoration-none text-white-50">Meetings</a></li>
+          <li><a href="{% url 'rooms' %}" class="text-decoration-none text-white-50">
+            <i class="fas fa-bed me-1"></i> Rooms
+          </a></li>
+          <li><a href="#" class="text-decoration-none text-white-50">
+            <i class="fas fa-utensils me-1"></i> Dining
+          </a></li>
+          <li><a href="#" class="text-decoration-none text-white-50">
+            <i class="fas fa-spa me-1"></i> Spa & Wellness
+          </a></li>
+          <li><a href="#" class="text-decoration-none text-white-50">
+            <i class="fas fa-chalkboard-user me-1"></i> Meetings
+          </a></li>
         </ul>
       </div>
       <div class="col-md-3 mb-4">
@@ -372,14 +452,18 @@
       <div class="col-md-3 mb-4">
         <h6 class="fw-bold">Awards</h6>
         <div class="d-flex gap-2 flex-wrap">
-          <span class="badge bg-dark p-2">World Travel Awards 2024</span>
-          <span class="badge bg-dark p-2">Green Key Certified</span>
+          <span class="badge bg-dark p-2">
+            <i class="fas fa-trophy me-1"></i> World Travel Awards 2024
+          </span>
+          <span class="badge bg-dark p-2">
+            <i class="fas fa-leaf me-1"></i> Green Key Certified
+          </span>
         </div>
       </div>
     </div>
     <hr class="opacity-25">
     <div class="text-center text-white-50 small">
-      © 2025 Scandic Hotel Group – Where Nordic soul meets modern hospitality.
+      <i class="far fa-copyright me-1"></i> 2025 Scandic Hotel Group – Where Nordic soul meets modern hospitality.
     </div>
   </div>
 </footer>

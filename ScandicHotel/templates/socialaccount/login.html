@@ -14,20 +14,81 @@
     <!-- Right side - form -->
     <div class="col-md-6 d-flex align-items-center justify-content-center">
       <div class="w-75">
-        <h2 class="fw-bold mb-1" style="color: #1e3c5c;">Sign in via Google</h2>
+        
+        <!-- Django Messages at the TOP -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show mb-4" 
+                 role="alert" 
+                 style="border-left: 4px solid #d4af37;
+                        {% if message.tags == 'error' %}background-color: #f8d7da;{% elif message.tags == 'warning' %}background-color: #fff3cd;{% endif %}">
+              <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% elif message.tags == 'warning' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+        
+        <!-- Form errors at the TOP -->
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert" 
+               style="border-left: 4px solid #d4af37; background-color: #f8d7da;">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {% for error in form.non_field_errors %}
+              {{ error }}
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endif %}
+        
+        <h2 class="fw-bold mb-1" style="color: #1e3c5c;">
+          <i class="fab fa-google me-2" style="color: #d4af37;"></i>
+          Sign in via Google
+        </h2>
         <p class="text-muted mb-4">You are about to sign in using your Google account.</p>
 
         <form method="POST" action="{{ signup_url }}">
           {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit" class="btn w-100 mb-3" style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px;">
-            Continue
+          
+          {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+          {% endfor %}
+          
+          {% for field in form.visible_fields %}
+            <div class="mb-3" style="display: none;">
+              {{ field }}
+            </div>
+          {% endfor %}
+          
+          <div class="mb-4 p-3" style="background-color: #f8f9fa; border-radius: 12px; border: 1px solid #e0e0e0;">
+            <div class="d-flex align-items-center">
+              <div class="me-3">
+                <i class="fab fa-google fa-2x" style="color: #d4af37;"></i>
+              </div>
+              <div>
+                <p class="mb-0 text-muted">
+                  <i class="fas fa-shield-alt me-1" style="color: #d4af37;"></i>
+                  You'll be redirected to Google to complete authentication
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn w-100 mb-3" 
+                  style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px; transition: all 0.3s ease;">
+            <i class="fab fa-google me-2"></i>
+            Continue with Google
           </button>
+          
+          <div class="text-center">
+            <a href="{% url 'account_login' %}" style="color: #d4af37; text-decoration: none;">
+              <i class="fas fa-arrow-left me-1"></i> Back to Sign In
+            </a>
+          </div>
         </form>
-        </div>
+        
+      </div>
     </div>
-    </div>
+  </div>
 </div>
-
-
 {% endblock %}
