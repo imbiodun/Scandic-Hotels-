@@ -135,10 +135,10 @@ LOGIN_REDIRECT_URL = "/profile/"
 
 SOCIALACCOUNT_ADAPTER = "base.adapters.MySocialAccountAdapter"
 
-ACCOUNT_FORMS = {
-    "signup": "base.form.CustomSignupForm",
-    "login": "base.form.CustomLoginForm",
-}
+# ACCOUNT_FORMS = {
+ #   "signup": "base.form.CustomSignupForm",
+  #  "login": "base.form.CustomLoginForm",
+#}
 
 
 # LOCAL VS PRODUCTION HTTPS SETTINGS
