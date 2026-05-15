@@ -111,8 +111,8 @@ def reservation(request, slug):
                     'quantity': 1,
                 }],
                 mode='payment',
-                success_url='http://127.0.0.1:8000/reservation/reservation_success/',
-                cancel_url='http://127.0.0.1:8000/rooms/' + slug + '/reservation/',
+                success_url='https://scandic-hotel-website.onrender.com/reservation/reservation_success/',
+                cancel_url='https://scandic-hotel-website.onrender.com/rooms/' + slug + '/reservation/',
             )
 
             return redirect(checkout_session.url)
