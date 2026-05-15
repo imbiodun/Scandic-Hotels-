@@ -56,7 +56,9 @@ def reservation(request, slug):
 
     if request.method == "POST":
         form = ReservationForm(request.POST)
+
         if form.is_valid():
+
             # 1. Get cleaned data
             guest_name = form.cleaned_data['guest_name']
             guest_email = form.cleaned_data['guest_email']
@@ -69,13 +71,17 @@ def reservation(request, slug):
 
             # 2. Look up discount code
             discount = None
+
             if discount_code:
                 try:
-                    discount = DiscountCode.objects.get(code=discount_code, active=True)
+                    discount = DiscountCode.objects.get(
+                        code=discount_code,
+                        active=True
+                    )
                 except DiscountCode.DoesNotExist:
                     discount = None
 
-            # 3. Store in session
+            # 3. Store reservation data in session
             request.session['reservation_data'] = {
                 'guest_name': guest_name,
                 'guest_email': guest_email,
@@ -88,9 +94,10 @@ def reservation(request, slug):
                 'room_slug': slug,
             }
 
-            # 4. Calculate total
+            # 4. Calculate total price
             nights = (check_out - check_in).days
             base_price = nights * room.price
+
             if discount:
                 if discount.discount_type == 'fixed':
                     total = max(0, base_price - discount.value)
@@ -99,28 +106,56 @@ def reservation(request, slug):
             else:
                 total = base_price
 
-            # 5. Create Stripe session
+            # 5. Dynamically detect domain
+            domain = request.build_absolute_uri("/").rstrip("/")
+
+            success_url = (
+                f"{domain}/reservation/reservation_success/"
+                f"?session_id={{CHECKOUT_SESSION_ID}}"
+            )
+
+            cancel_url = (
+                f"{domain}/rooms/{slug}/reservation/"
+            )
+
+            # 6. Create Stripe checkout session
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
+
                 line_items=[{
                     'price_data': {
                         'currency': 'eur',
-                        'product_data': {'name': room.room_name},
+
+                        'product_data': {
+                            'name': room.room_name,
+                        },
+
                         'unit_amount': int(total * 100),
                     },
+
                     'quantity': 1,
                 }],
+
                 mode='payment',
-                #success_url='https://scandic-hotel-website.onrender.com/reservation/reservation_success/',
-                success_url='https://scandic-hotel-website.onrender.com/reservation/reservation_success/?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url='https://scandic-hotel-website.onrender.com/rooms/' + slug + '/reservation/',
+
+                success_url=success_url,
+                cancel_url=cancel_url,
             )
 
+            # 7. Redirect to Stripe Checkout
             return redirect(checkout_session.url)
+
     else:
         form = ReservationForm()
 
-    return render(request, "reservation.html", {'form': form, "room": room})
+    return render(
+        request,
+        "reservation.html",
+        {
+            'form': form,
+            'room': room,
+        }
+    )
 
 '''
 def reservation_success(request):
