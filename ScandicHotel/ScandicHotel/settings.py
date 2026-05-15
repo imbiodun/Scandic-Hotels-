@@ -171,3 +171,8 @@ SRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 
 SOCIALACCOUNT_ADAPTER = 'base.adapters.MySocialAccountAdapter'
+
+ACCOUNT_FORMS = {
+    'signup': 'base.form.CustomSignupForm',
+    
+}
