@@ -90,14 +90,14 @@ WSGI_APPLICATION = 'ScandicHotel.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-'''
+
 DATABASES = {
     'default': dj_database_url.parse('postgresql://scandic_render_user:9ogLugOI2KYOWd98RaF6ehGYhuIBqGrD@dpg-d83dovtckfvc73bhrko0-a.ohio-postgres.render.com/scandic_render')
 }
