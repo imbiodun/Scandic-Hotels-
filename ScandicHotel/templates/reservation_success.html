@@ -58,7 +58,15 @@
                             </div>
                             <div class="col-md-6 text-start text-md-end">
                                 <small class="text-muted">Confirmation Sent To</small>
-                                <p class="fw-bold mb-0" style="color: #1e3c5c;">{{ request.user.email }}</p>
+                                <p class="fw-bold mb-0" style="color: #1e3c5c;">
+
+                                    {% if request.user.is_authenticated %}
+                                        {{ request.user.email }}
+                                    {% else %}
+                                        Guest
+                                    {% endif %}
+
+                                </p>
                             </div>
                         </div>
                     </div>

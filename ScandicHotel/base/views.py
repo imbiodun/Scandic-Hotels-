@@ -157,6 +157,79 @@ def reservation(request, slug):
         }
     )
 
+def reservation_success(request):
+    reservation_data = request.session.get('reservation_data')
+
+    if not reservation_data:
+        return render(request, "reservation_success.html", {
+            "reservation": None,
+            "booking_id": "Payment confirmed",
+        })
+
+    room = Room.objects.get(slug=reservation_data['room_slug'])
+
+    discount = None
+    if reservation_data.get('discount_code'):
+        try:
+            discount = DiscountCode.objects.get(
+                code=reservation_data['discount_code'],
+                active=True
+            )
+        except DiscountCode.DoesNotExist:
+            discount = None
+
+    check_in = date.fromisoformat(reservation_data['check_in'])
+    check_out = date.fromisoformat(reservation_data['check_out'])
+    nights = (check_out - check_in).days
+    base_price = room.price * nights
+
+    if discount:
+        if discount.discount_type == 'fixed':
+            total_price = max(0, base_price - discount.value)
+        else:
+            total_price = base_price * (1 - discount.value / 100)
+    else:
+        total_price = base_price
+
+    reservation = Reservation.objects.create(
+        room=room,
+        user=request.user,
+        guest_name=reservation_data['guest_name'],
+        guest_email=reservation_data['guest_email'],
+        check_in=check_in,
+        check_out=check_out,
+        number_of_guests=reservation_data['number_of_guests'],
+        discount_code=discount,
+        special_requests=reservation_data['special_requests'],
+        Payment_method=reservation_data['Payment_method'],
+        total_price=total_price,
+    )
+
+    try:
+        send_mail(
+            'Reservation Confirmation',
+            f'Thank you for your reservation, {reservation.guest_name}!\n\n'
+            f'Room: {reservation.room.room_name}\n'
+            f'Check-in: {reservation.check_in}\n'
+            f'Check-out: {reservation.check_out}\n'
+            f'Total Price: €{reservation.total_price}\n\n'
+            f'Payment Method: {reservation.Payment_method}\n\n'
+            f'Reservation Date: {reservation.created_at.strftime("%Y-%m-%d %H:%M")}\n\n'
+            'We look forward to welcoming you to Scandic Hotel!',
+            settings.DEFAULT_FROM_EMAIL,
+            [reservation.guest_email],
+            fail_silently=True,
+        )
+    except Exception as e:
+        print(f"Email failed: {e}")
+
+    if 'reservation_data' in request.session:
+        del request.session['reservation_data']
+
+    return render(request, "reservation_success.html", {
+        "reservation": reservation,
+        "booking_id": reservation.id,
+    })
 '''
 def reservation_success(request):
     reservation_data = request.session.get('reservation_data')
@@ -223,89 +296,6 @@ def reservation_success(request):
 
     return render(request, "reservation_success.html", {"reservation": reservation})
 '''
-def reservation_success(request):
-    reservation_data = request.session.get('reservation_data')
-    
-    # Session lost after Stripe redirect — very common on deployed sites
-    if not reservation_data:
-        session_id = request.GET.get('session_id')
-        if not session_id:
-            return redirect('home')
-        
-        # Verify payment was actually successful with Stripe
-        try:
-            stripe_session = stripe.checkout.Session.retrieve(session_id)
-            if stripe_session.payment_status != 'paid':
-                return redirect('home')
-        except Exception:
-            return redirect('home')
-        
-        # Session is gone but payment was confirmed
-        # Show generic success page
-        return render(request, "reservation_success.html", {
-            "reservation": None,
-        })
-
-    room = Room.objects.get(slug=reservation_data['room_slug'])
-    
-    discount = None
-    if reservation_data['discount_code']:
-        try:
-            discount = DiscountCode.objects.get(
-                code=reservation_data['discount_code'], active=True
-            )
-        except DiscountCode.DoesNotExist:
-            discount = None
-
-    check_in = date.fromisoformat(reservation_data['check_in'])
-    check_out = date.fromisoformat(reservation_data['check_out'])
-    nights = (check_out - check_in).days
-    base_price = room.price * nights
-
-    if discount:
-        if discount.discount_type == 'fixed':
-            total_price = max(0, base_price - discount.value)
-        else:
-            total_price = base_price * (1 - discount.value / 100)
-    else:
-        total_price = base_price
-
-    reservation = Reservation.objects.create(
-        room=room,
-        user=request.user,
-        guest_name=reservation_data['guest_name'],
-        guest_email=reservation_data['guest_email'],
-        check_in=check_in,
-        check_out=check_out,
-        number_of_guests=reservation_data['number_of_guests'],
-        discount_code=discount,
-        special_requests=reservation_data['special_requests'],
-        Payment_method=reservation_data['Payment_method'],
-        total_price=total_price,
-    )
-
-    try:
-        send_mail(
-            'Reservation Confirmation',
-            f'Thank you for your reservation, {reservation.guest_name}!\n\n'
-            f'Room: {reservation.room.room_name}\n'
-            f'Check-in: {reservation.check_in}\n'
-            f'Check-out: {reservation.check_out}\n'
-            f'Total Price: €{reservation.total_price}\n\n'
-            f'Payment Method: {reservation.Payment_method}\n\n'
-            f'Reservation Date: {reservation.created_at.strftime("%Y-%m-%d %H:%M")}\n\n'
-            'We look forward to welcoming you to Scandic Hotel!',
-            settings.DEFAULT_FROM_EMAIL,
-            [reservation.guest_email],
-            fail_silently=False,
-        )
-    except Exception as e:
-        print(f"Email failed: {e}")
-
-    del request.session['reservation_data']
-
-    return render(request, "reservation_success.html", {"reservation": reservation})
-
 @login_required
 def profile(request):
     from django.utils import timezone
