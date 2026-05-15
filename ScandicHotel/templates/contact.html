@@ -1,32 +1,67 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
-<div class="Contact-hero-section">
-    <div class="hero-caption">
-        <h1>Get in Touch with Scandic</h1>
-        <p>Have questions or need assistance? Send us a message, our team is here to help you with all your inquiries.</p>
+<div class="container-fluid min-vh-100 p-0">
+  <div class="row min-vh-100 m-0">
+    
+    <!-- Left side - Contact Form -->
+    <div class="col-md-6 d-flex align-items-center justify-content-center p-5" style="background-color: #f8f9fa;">
+      <div class="w-75">
+        <h2 class="fw-bold mb-3" style="color: #1e3c5c;">Get in Touch with Scandic</h2>
+        <p class="text-muted mb-4">Have questions or need assistance? Our team is here to help you with all your inquiries.</p>
+        
         <form method="POST" action="{% url 'contact' %}">
-            {% csrf_token %}
-
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="mb-3">
-                <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-gold">Send Message</button>
+          {% csrf_token %}
+          
+          <!-- Name field -->
+          <div class="mb-4">
+            <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold" style="color: #1e3c5c;">
+              Full Name <span class="text-danger">*</span>
+            </label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <div class="text-danger small mt-1">{{ form.name.errors }}</div>
+            {% endif %}
+          </div>
+          
+          <!-- Email field -->
+          <div class="mb-4">
+            <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold" style="color: #1e3c5c;">
+              Email Address <span class="text-danger">*</span>
+            </label>
+            {{ form.email }}
+            {% if form.email.errors %}
+              <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+            {% endif %}
+          </div>
+          
+          <!-- Message field -->
+          <div class="mb-4">
+            <label for="{{ form.message.id_for_label }}" class="form-label fw-semibold" style="color: #1e3c5c;">
+              Message <span class="text-danger">*</span>
+            </label>
+            {{ form.message }}
+            {% if form.message.errors %}
+              <div class="text-danger small mt-1">{{ form.message.errors }}</div>
+            {% endif %}
+          </div>
+          
+          <button type="submit" class="btn w-100 py-2 mb-3" 
+                  style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px; transition: all 0.3s ease;">
+            Send Message
+            <i class="fas fa-paper-plane ms-2"></i>
+          </button>
+        </form>
+      </div>
     </div>
-
+    
+    <!-- Right side - Image -->
+    <div class="col-md-6 p-0">
+      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+           alt="Scandic Hotel" 
+           style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    
+  </div>
 </div>
 {% endblock %}
-
-
-
-

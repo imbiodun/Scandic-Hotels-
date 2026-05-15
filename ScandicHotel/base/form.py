@@ -24,7 +24,7 @@ class ReservationForm(forms.Form):
 
 
 
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm,LoginForm
 
 class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
@@ -48,3 +48,20 @@ class CustomSignupForm(SignupForm):
                 field.widget.attrs['placeholder'] = 'Create a password'
             elif field_name == 'password2':
                 field.widget.attrs['placeholder'] = 'Confirm your password'
+
+class CustomLoginForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Style login fields
+        for field_name, field in self.fields.items():
+            if field.widget.__class__.__name__ == 'CheckboxInput':
+                field.widget.attrs['class'] = 'form-check-input'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+            
+            # Add placeholders
+            if field_name == 'login':
+                field.widget.attrs['placeholder'] = 'Enter your email or username'
+            elif field_name == 'password':
+                field.widget.attrs['placeholder'] = 'Enter your password'
