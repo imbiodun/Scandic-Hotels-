@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from urllib3 import request
+
 from .form import ContactForm, ReservationForm
 from django.core.mail import send_mail
 from django.conf import settings
