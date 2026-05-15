@@ -19,24 +19,121 @@
 
         <form method="POST" action="{% url 'account_signup' %}">
           {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit" class="btn w-100 mb-3" style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px;">
+          
+          <!-- Email field -->
+          <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold" style="color: #1e3c5c;">
+              Email Address
+            </label>
+            {{ form.email }}
+            {% if form.email.errors %}
+              <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+            {% endif %}
+            {% if form.email.help_text %}
+              <small class="text-muted">{{ form.email.help_text }}</small>
+            {% endif %}
+          </div>
+
+          <!-- Username field (if exists) -->
+          {% if form.username %}
+          <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold" style="color: #1e3c5c;">
+              Username
+            </label>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+            {% endif %}
+            {% if form.username.help_text %}
+              <small class="text-muted">{{ form.username.help_text }}</small>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <!-- Password1 field -->
+          <div class="mb-3">
+            <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold" style="color: #1e3c5c;">
+              Password
+            </label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+              <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+            {% endif %}
+            {% if form.password1.help_text %}
+              <small class="text-muted">{{ form.password1.help_text }}</small>
+            {% endif %}
+          </div>
+
+          <!-- Password2 field (confirm password) -->
+          <div class="mb-3">
+            <label for="{{ form.password2.id_for_label }}" class="form-label fw-semibold" style="color: #1e3c5c;">
+              Confirm Password
+            </label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+              <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+            {% endif %}
+            {% if form.password2.help_text %}
+              <small class="text-muted">{{ form.password2.help_text }}</small>
+            {% endif %}
+          </div>
+
+          <!-- Terms and conditions checkbox (optional - add if needed) -->
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="termsCheckbox" required>
+            <label class="form-check-label text-muted" for="termsCheckbox">
+              I agree to the <a href="#" style="color: #d4af37;">Terms and Conditions</a> and 
+              <a href="#" style="color: #d4af37;">Privacy Policy</a>
+            </label>
+          </div>
+
+          <button type="submit" class="btn w-100 mb-3" style="background-color: #d4af37; color: #1e3c5c; font-weight: 700; border-radius: 40px; transition: all 0.3s ease;">
             Sign Up
           </button>
         </form>
 
-        <div class="text-center mb-3">or</div>
+        <div class="text-center mb-3 position-relative">
+          <div class="position-absolute top-50 start-0 end-0 border-top" style="z-index: 0;"></div>
+          <span class="bg-white px-3 position-relative" style="z-index: 1; color: #6c757d; font-size: 14px;">or</span>
+        </div>
 
-        <a href="/accounts/google/login/?process=login" class="btn w-100" style="border: 1.5px solid #d4af37; color: #1e3c5c; border-radius: 40px; font-weight: 500;">
-          <i class="fab fa-google me-2"></i> Sign in with Google
+        <a href="/accounts/google/login/?process=login" class="btn w-100" style="border: 1.5px solid #d4af37; color: #1e3c5c; border-radius: 40px; font-weight: 500; transition: all 0.3s ease;">
+          <i class="fab fa-google me-2"></i> Sign up with Google
         </a>
 
         <p class="text-center mt-4 text-muted">Already have an account? 
-          <a href="{% url 'account_login' %}" style="color: #d4af37;">Sign In</a>
+          <a href="{% url 'account_login' %}" style="color: #d4af37; text-decoration: none; font-weight: 500;">Sign In</a>
         </p>
+
+        <!-- Non-field errors -->
+        {% if form.non_field_errors %}
+          <div class="alert mt-3" style="background-color: #fff3cd; border-left: 4px solid #d4af37; color: #1e3c5c;" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            {% for error in form.non_field_errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- Add this CSS for hover effects -->
+<style>
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+  }
+  
+  .form-control:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+  }
+  
+  input, textarea, select {
+    transition: all 0.2s ease;
+  }
+</style>
 {% endblock %}

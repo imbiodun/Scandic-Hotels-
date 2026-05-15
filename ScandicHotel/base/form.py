@@ -21,3 +21,30 @@ class ReservationForm(forms.Form):
         ('bank_transfer', 'Bank Transfer'),
         ('cash', 'Cash on Arrival'),
     ], widget=forms.Select(attrs={'class': 'form-control'}))
+
+
+
+from allauth.account.forms import SignupForm
+
+class CustomSignupForm(SignupForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Add Bootstrap classes to all fields
+        for field_name, field in self.fields.items():
+            if field.widget.__class__.__name__ == 'CheckboxInput':
+                field.widget.attrs['class'] = 'form-check-input'
+            elif field.widget.__class__.__name__ == 'Select':
+                field.widget.attrs['class'] = 'form-select'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+            
+            # Add placeholders
+            if field_name == 'email':
+                field.widget.attrs['placeholder'] = 'your@email.com'
+            elif field_name == 'username':
+                field.widget.attrs['placeholder'] = 'Choose a username'
+            elif field_name == 'password1':
+                field.widget.attrs['placeholder'] = 'Create a password'
+            elif field_name == 'password2':
+                field.widget.attrs['placeholder'] = 'Confirm your password'
