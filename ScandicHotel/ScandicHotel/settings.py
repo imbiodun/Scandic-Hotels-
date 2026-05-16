@@ -24,7 +24,7 @@ ALLOWED_HOSTS = os.getenv(
     "localhost,127.0.0.1,scandic-hotels.onrender.com"
 ).split(",")
 
-
+"""
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
@@ -41,6 +41,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     }
 }
+"""
 
 # APPLICATIONS
 INSTALLED_APPS = [
