@@ -404,7 +404,7 @@ Stores room amenities and features.
 
 ## Contact Page
 ```markdown
-![Contact Page](screenshots/ContactPage.png"
+![Contact Page](screenshots/ContactPage.png")
 ```
 
 
