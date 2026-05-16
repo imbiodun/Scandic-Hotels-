@@ -194,7 +194,7 @@ def reservation_success(request):
 
         reservation = Reservation.objects.create(
             room=room,
-            user=request.user if request.user.is_authenticated else None,
+            user=request.user,
             guest_name=reservation_data['guest_name'],
             guest_email=reservation_data['guest_email'],
             check_in=check_in,
