@@ -69,7 +69,7 @@ class Reservation(models.Model):
         ('cancelled', 'Cancelled'),
     ]
     room= models.ForeignKey(Room, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     guest_name = models.CharField(max_length=100)
     guest_email = models.EmailField()
     check_in = models.DateField()
