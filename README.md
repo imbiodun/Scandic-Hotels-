@@ -388,22 +388,25 @@ Stores room amenities and features.
 ## Homepage
 
 ```markdown
-![Homepage](screenshots/homepage.png)
+![Homepage](screenshots/HomePage.png)
 ```
 
 ## Room Detail
 
 ```markdown
-![Room Detail](screenshots/room-detail.png)
+![Room Detail](screenshots/Rooms.png)
 ```
 
-## Reservation Success
-
+## Sign in page
 ```markdown
-![Reservation Success](screenshots/reservation-success.png)
+![SignIn Page](screenshots/signin.png)
 ```
 
----
+## Contact Page
+```markdown
+![Contact Page](screenshots/ContactPage.png"
+```
+
 
 # 👥 Contributors
 
