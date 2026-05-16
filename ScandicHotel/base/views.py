@@ -392,8 +392,8 @@ def reservation_success(request):
                 [reservation.guest_email],
                 fail_silently=True,
             )
-        except Exception as e:
-            print(f"Email failed: {e}")
+        except Exception:
+            pass
 
         # Clear reservation data and mark as created to prevent duplicates
         del request.session['reservation_data']
