@@ -396,7 +396,7 @@ Stores room amenities and features.
 
 
 ## Contact Page
-![Contact Page](screenshots/ContactPage.png")
+![Contact Page](screenshots/ContactPage.png)
 
 
 # 👥 Contributors
