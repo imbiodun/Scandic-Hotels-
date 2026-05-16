@@ -386,26 +386,17 @@ Stores room amenities and features.
 # 📸 Screenshots
 
 ## Homepage
-
-```markdown
 ![Homepage](screenshots/HomePage.png)
-```
 
 ## Room Detail
-
-```markdown
 ![Room Detail](screenshots/Rooms.png)
-```
 
 ## Sign in page
-```markdown
 ![SignIn Page](screenshots/signin.png)
-```
+
 
 ## Contact Page
-```markdown
 ![Contact Page](screenshots/ContactPage.png")
-```
 
 
 # 👥 Contributors
